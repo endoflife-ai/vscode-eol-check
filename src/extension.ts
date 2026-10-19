@@ -3,7 +3,14 @@ import * as https from 'https';
 import * as path from 'path';
 
 const EXT_ID = 'endoflife-ai';
+// The settings and commands package.json declares (endoflifeAi.*). Until 1.0.1 the code read
+// settings and registered commands under EXT_ID (endoflife-ai.*), so a key or warningDays set in
+// the Settings screen was never read and both palette commands were missing. The old spelling is
+// still read for the key, because the 1.0.0 README told people to use it.
+const CONFIG_NS = 'endoflifeAi';
 const API_BASE = 'https://api.endoflife.ai/v1';
+// From 2026-11-16 the API refuses data requests without a key (HTTP 401): say so once per session.
+let keyRequiredShown = false;
 
 // ─── Cache ────────────────────────────────────────────────────────────────────
 // Avoid hammering the API — cache results for 1 hour per slug+version
@@ -37,6 +44,14 @@ function fetchJson(url: string, apiKey: string): Promise<EolStatus | null> {
 
     https.get(url, { headers }, (res) => {
       if (res.statusCode === 404) { resolve(null); return; }
+      if (res.statusCode === 401) {
+        res.resume();
+        if (!keyRequiredShown) {
+          keyRequiredShown = true;
+          vscode.window.showWarningMessage('EOL Check: the endoflife.ai API needs an API key (keyless access ended November 16, 2026). Get a free key at https://endoflife.ai/api#free-key and set endoflifeAi.apiKey in Settings.');
+        }
+        resolve(null); return;
+      }
       if (res.statusCode === 429) { resolve(null); return; } // rate limited — silent fail
       if (res.statusCode !== 200) { resolve(null); return; }
       let data = '';
@@ -221,10 +236,10 @@ async function checkDocument(
   doc: vscode.TextDocument,
   diagCollection: vscode.DiagnosticCollection
 ): Promise<void> {
-  const config = vscode.workspace.getConfiguration(EXT_ID);
+  const config = vscode.workspace.getConfiguration(CONFIG_NS);
   if (!config.get<boolean>('enabled', true)) return;
 
-  const apiKey = config.get<string>('apiKey', '');
+  const apiKey = config.get<string>('apiKey', '') || vscode.workspace.getConfiguration(EXT_ID).get<string>('apiKey', '');
   const warningDays = config.get<number>('warningDays', 90);
 
   const text = doc.getText();
@@ -289,7 +304,7 @@ export function activate(context: vscode.ExtensionContext): void {
 
   // Manual scan command
   context.subscriptions.push(
-    vscode.commands.registerCommand(`${EXT_ID}.checkNow`, async () => {
+    vscode.commands.registerCommand(`${CONFIG_NS}.checkNow`, async () => {
       cache.clear();
       vscode.workspace.textDocuments.forEach(doc => checkDocument(doc, diagCollection));
       vscode.window.showInformationMessage('EOL Check: Scanning workspace...');
@@ -298,7 +313,7 @@ export function activate(context: vscode.ExtensionContext): void {
 
   // Open score card command
   context.subscriptions.push(
-    vscode.commands.registerCommand(`${EXT_ID}.openScoreCard`, async () => {
+    vscode.commands.registerCommand(`${CONFIG_NS}.openScoreCard`, async () => {
       const editor = vscode.window.activeTextEditor;
       if (!editor) return;
       const doc = editor.document;
