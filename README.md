@@ -40,7 +40,7 @@ Opens a red underline (error) or yellow underline (warning) on any version pin t
 
 ## Data
 
-EOL dates sourced from [endoflife.ai](https://endoflife.ai) — free lifecycle intelligence for 600+ products, updated daily. Results are cached for 1 hour to minimise API calls.
+EOL dates sourced from [endoflife.ai](https://endoflife.ai) — free lifecycle intelligence for 700+ products, updated daily. Results are cached for 1 hour to minimise API calls.
 
 ## API & rate limits
 
@@ -50,7 +50,7 @@ From November 16, 2026 at 00:00 UTC the endoflife.ai API needs a key for every l
 
 ## REST API
 
-Everything this integration shows is also available as a REST API — EOL dates and EOL Risk Scores for 600+ products, with an [OpenAPI 3.0 spec](https://api.endoflife.ai/openapi.json) you can import straight into Postman, Insomnia, or your codegen tool.
+Everything this integration shows is also available as a REST API — EOL dates and EOL Risk Scores for 700+ products, with an [OpenAPI 3.0 spec](https://api.endoflife.ai/openapi.json) you can import straight into Postman, Insomnia, or your codegen tool.
 
 ```bash
 curl -H "X-API-Key: your_key_here" https://api.endoflife.ai/v1/score/nodejs/18
