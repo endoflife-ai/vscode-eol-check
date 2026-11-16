@@ -2,7 +2,7 @@
   "name": "endoflife-ai",
   "displayName": "EOL Check — endoflife.ai",
   "description": "Inline end-of-life warnings for your runtime version files. Powered by endoflife.ai.",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "publisher": "endoflife-ai",
   "icon": "icon.png",
   "engines": {
@@ -34,7 +34,7 @@
         "endoflifeAi.apiKey": {
           "type": "string",
           "default": "",
-          "description": "endoflife.ai API key. Required from November 16, 2026, when keyless access ends; free key at https://endoflife.ai/api#free-key"
+          "description": "endoflife.ai API key. Required. A free key works: 150 requests a day, no expiry, emailed at once from https://endoflife.ai/api#free-key"
         },
         "endoflifeAi.warningDays": {
           "type": "number",
