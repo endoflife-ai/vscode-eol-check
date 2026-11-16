@@ -24,6 +24,9 @@ let apiState = 'ok';
 // the old key cannot overwrite the newer result.
 let generation = 0;
 let statusBar;
+// True once a file with a version pin has been seen in this window. The status bar item is shown
+// only then, so the extension adds nothing to workspaces it has nothing to say about.
+let sawPins = false;
 const cache = new Map();
 const CACHE_TTL = 60 * 60 * 1000; // 1 hour
 // ─── HTTP ─────────────────────────────────────────────────────────────────────
@@ -118,6 +121,10 @@ function updateStatusBar() {
     statusBar.text = text;
     statusBar.tooltip = `${tooltip} Click to open the setting.`;
     statusBar.backgroundColor = warn ? new vscode.ThemeColor('statusBarItem.warningBackground') : undefined;
+    if (sawPins)
+        statusBar.show();
+    else
+        statusBar.hide();
 }
 function showKeyNeeded(refused) {
     if (keyRequiredShown)
@@ -307,6 +314,7 @@ async function checkDocument(doc, diagCollection) {
         diagCollection.set(doc.uri, []);
         return;
     }
+    sawPins = true;
     const diagnostics = [];
     const gen = generation;
     for (const d of detections) {
@@ -382,7 +390,6 @@ function activate(context) {
     statusBar.command = { title: 'Open setting', command: 'workbench.action.openSettings', arguments: [`${CONFIG_NS}.apiKey`] };
     context.subscriptions.push(statusBar);
     updateStatusBar();
-    statusBar.show();
     const scanOpenDocuments = () => {
         generation++;
         vscode.workspace.textDocuments.forEach(doc => checkDocument(doc, diagCollection));

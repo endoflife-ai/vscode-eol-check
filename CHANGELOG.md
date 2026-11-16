@@ -5,7 +5,7 @@
 The endoflife.ai API has needed a key for every lookup since November 16, 2026. Before this release a missing or refused key left files with no marks at all, so an end-of-life version looked the same as a clean file.
 
 - A version pin that could not be checked now gets a blue note (information) that says why: no key is set, the key was refused, the key's daily limit was reached, endoflife.ai does not track that version, or the API gave no answer.
-- New status bar item: `EOL: on`, `EOL: key needed`, `EOL: limit reached` or `EOL: off`. Click it to open the key setting.
+- New status bar item: `EOL: on`, `EOL: key needed`, `EOL: limit reached` or `EOL: off`. Click it to open the key setting. It appears once a file with a version pin has been opened.
 - The one-time message about the key now has two buttons: Open Setting and Get Free Key.
 - A failed lookup is no longer cached. Open files are checked again as soon as a setting changes, so a new key takes effect at once.
 - No request is sent when no key is set.

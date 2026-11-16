@@ -14,7 +14,7 @@ Opens a red underline (error) or yellow underline (warning) on any version pin t
 
 The extension needs an endoflife.ai API key. A free key works. A pin that could not be checked gets a blue note (information) that says why: no key is set, the key was refused, the key's daily limit was reached, endoflife.ai does not track that version, or the API gave no answer. An unchecked pin is never left looking clean.
 
-The status bar shows the state: `EOL: on`, `EOL: key needed`, `EOL: limit reached` or `EOL: off`. Click it to open the key setting.
+The status bar shows the state: `EOL: on`, `EOL: key needed`, `EOL: limit reached` or `EOL: off`. Click it to open the key setting. It appears once a file with a version pin has been opened.
 
 ## Supported files
 
